@@ -1,7 +1,11 @@
+import { createRoot } from "react-dom/client";
+import App from "./app/App.tsx";
+// @ts-ignore: CSS module declarations not present for side-effect import
+import "./styles/index.css";
 
-  import { createRoot } from "react-dom/client";
-  import App from "./app/App.tsx";
-  import "./styles/index.css";
+const container = document.getElementById("root");
 
-  createRoot(document.getElementById("root")!).render(<App />);
-  
+if (container) {
+  const root = createRoot(container);
+  root.render(<App />);
+}
