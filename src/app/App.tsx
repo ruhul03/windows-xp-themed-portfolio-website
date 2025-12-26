@@ -1,16 +1,7 @@
 import { useState } from "react";
-import { XPWindow } from "./components/XPWindow";
-import { Taskbar } from "./components/Taskbar";
-import { StartMenu } from "./components/StartMenu";
-import { DesktopIcon } from "./components/DesktopIcon";
-import { StartupAnimation } from "./components/StartupAnimation";
-import { AboutContent } from "./components/AboutContent";
-import { ProjectsContent } from "./components/ProjectsContent";
-import { SkillsContent } from "./components/SkillsContent";
-import { ContactContent } from "./components/ContactContent";
 import { User, FolderOpen, FileText, Mail, Monitor } from "lucide-react";
-import React from "react";
-interface Window {
+
+interface WindowType {
   id: string;
   title: string;
   content: React.ReactNode;
@@ -22,39 +13,71 @@ interface Window {
 }
 
 export default function App() {
-  const [isStartupComplete, setIsStartupComplete] = useState(false);
-  const [windows, setWindows] = useState<Window[]>([]);
+  const [isStartupComplete, setIsStartupComplete] = useState(true);
+  const [windows, setWindows] = useState<WindowType[]>([]);
   const [showStartMenu, setShowStartMenu] = useState(false);
   const [zCounter, setZCounter] = useState(50);
 
-  if (!isStartupComplete) {
-    return <StartupAnimation onComplete={() => setIsStartupComplete(true)} />;
-  }
-
   const getWindowContent = (id: string) => {
     switch (id) {
-      case "about": return <AboutContent />;
-      case "projects": return <ProjectsContent />;
-      case "skills": return <SkillsContent />;
-      case "contact": return <ContactContent />;
-      default: return <div>Welcome to Windows XP Portfolio</div>;
+      case "about":
+        return (
+          <div className="p-6 bg-white h-full overflow-auto">
+            <h2 className="text-2xl font-bold text-[#0054E3] mb-4">About Me</h2>
+            <p className="text-gray-700 leading-relaxed">
+              Welcome to my Windows XP themed portfolio! I'm a passionate developer
+              who loves creating nostalgic experiences.
+            </p>
+          </div>
+        );
+      case "projects":
+        return (
+          <div className="p-6 bg-white h-full overflow-auto">
+            <h2 className="text-2xl font-bold text-[#0054E3] mb-4">My Projects</h2>
+            <p className="text-gray-700">View my latest projects here.</p>
+          </div>
+        );
+      case "skills":
+        return (
+          <div className="p-6 bg-white h-full overflow-auto">
+            <h2 className="text-2xl font-bold text-[#0054E3] mb-4">Skills</h2>
+            <p className="text-gray-700">My technical skills and expertise.</p>
+          </div>
+        );
+      case "contact":
+        return (
+          <div className="p-6 bg-white h-full overflow-auto">
+            <h2 className="text-2xl font-bold text-[#0054E3] mb-4">Contact</h2>
+            <p className="text-gray-700">Get in touch with me.</p>
+          </div>
+        );
+      default:
+        return (
+          <div className="p-6 bg-white h-full">
+            <h2 className="text-xl font-bold">Welcome to Windows XP Portfolio</h2>
+          </div>
+        );
     }
   };
 
   const bringToFront = (id: string) => {
-    setWindows(prev => prev.map(w => w.id === id ? { ...w, zIndex: zCounter + 1 } : w));
-    setZCounter(prev => prev + 1);
+    setWindows((prev) =>
+      prev.map((w) => (w.id === id ? { ...w, zIndex: zCounter + 1 } : w))
+    );
+    setZCounter((prev) => prev + 1);
   };
 
   const openWindow = (id: string, title: string) => {
-    const existing = windows.find(w => w.id === id);
+    const existing = windows.find((w) => w.id === id);
     if (existing) {
-      setWindows(prev => prev.map(w =>
-        w.id === id ? { ...w, isMinimized: false, zIndex: zCounter + 1 } : w
-      ));
-      setZCounter(prev => prev + 1);
+      setWindows((prev) =>
+        prev.map((w) =>
+          w.id === id ? { ...w, isMinimized: false, zIndex: zCounter + 1 } : w
+        )
+      );
+      setZCounter((prev) => prev + 1);
     } else {
-      const newWindow: Window = {
+      const newWindow: WindowType = {
         id,
         title,
         content: getWindowContent(id),
@@ -64,99 +87,233 @@ export default function App() {
         defaultPosition: { x: 100 + windows.length * 30, y: 80 + windows.length * 30 },
         defaultSize: { width: 600, height: 400 },
       };
-      setWindows(prev => [...prev, newWindow]);
-      setZCounter(prev => prev + 1);
+      setWindows((prev) => [...prev, newWindow]);
+      setZCounter((prev) => prev + 1);
     }
   };
 
   const closeWindow = (id: string) => {
-    setWindows(prev => prev.filter(w => w.id !== id));
+    setWindows((prev) => prev.filter((w) => w.id !== id));
   };
 
   const minimizeWindow = (id: string) => {
-    setWindows(prev => prev.map(w => w.id === id ? { ...w, isMinimized: true } : w));
+    setWindows((prev) =>
+      prev.map((w) => (w.id === id ? { ...w, isMinimized: true } : w))
+    );
   };
 
   const maximizeWindow = (id: string) => {
-    setWindows(prev => prev.map(w => w.id === id ? { ...w, isMaximized: !w.isMaximized } : w));
+    setWindows((prev) =>
+      prev.map((w) => (w.id === id ? { ...w, isMaximized: !w.isMaximized } : w))
+    );
     bringToFront(id);
   };
 
   const handleTaskClick = (id: string) => {
-    const w = windows.find(win => win.id === id);
+    const w = windows.find((win) => win.id === id);
     if (!w) return;
-    if (w.isMinimized) setWindows(prev => prev.map(win => win.id === id ? { ...win, isMinimized: false } : win));
+    if (w.isMinimized)
+      setWindows((prev) =>
+        prev.map((win) => (win.id === id ? { ...win, isMinimized: false } : win))
+      );
     bringToFront(id);
   };
 
   const desktopIcons = [
-    { id: "about", icon: <User className="w-8 h-8 text-[#0054E3]" />, label: "About Me" },
-    { id: "projects", icon: <FolderOpen className="w-8 h-8 text-[#FFD700]" />, label: "My Projects" },
-    { id: "skills", icon: <FileText className="w-8 h-8 text-[#2B882B]" />, label: "Skills" },
-    { id: "contact", icon: <Mail className="w-8 h-8 text-[#E81123]" />, label: "Contact" },
-    { id: "computer", icon: <Monitor className="w-8 h-8 text-[#0054E3]" />, label: "My Computer" },
+    { id: "about", icon: User, label: "About Me", color: "#0054E3" },
+    { id: "projects", icon: FolderOpen, label: "My Projects", color: "#FFD700" },
+    { id: "skills", icon: FileText, label: "Skills", color: "#2B882B" },
+    { id: "contact", icon: Mail, label: "Contact", color: "#E81123" },
+    { id: "computer", icon: Monitor, label: "My Computer", color: "#0054E3" },
   ];
 
-  const topWindowId = windows.reduce((topId, w) =>
-    w.zIndex > (windows.find(win => win.id === topId)?.zIndex || 0) ? w.id : topId,
-    windows[0]?.id || null
-  );
+  const topWindowId =
+    windows.length > 0
+      ? windows.reduce((topId, w) =>
+          w.zIndex > (windows.find((win) => win.id === topId)?.zIndex || 0)
+            ? w.id
+            : topId,
+          windows[0].id
+        )
+      : null;
 
   return (
-    <div className="w-full h-full relative overflow-hidden"
+    <div
+      className="w-full h-screen relative overflow-hidden bg-[#5A8FCC]"
       style={{
-        backgroundImage: "url(https://images.unsplash.com/photo-1761237423403-3ef1b5c72c73?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080"><rect fill="%235A8FCC" width="1920" height="1080"/></svg>')`,
       }}
     >
       {/* Desktop Icons */}
-      <div className="absolute top-4 left-4 flex flex-col gap-2">
-        {desktopIcons.map(icon => (
-          <DesktopIcon
-            key={icon.id}
-            icon={icon.icon}
-            label={icon.label}
-            onClick={() => openWindow(icon.id, icon.label)}
-          />
-        ))}
+      <div className="absolute top-4 left-4 flex flex-col gap-4">
+        {desktopIcons.map((icon) => {
+          const IconComponent = icon.icon;
+          return (
+            <button
+              key={icon.id}
+              onClick={() => openWindow(icon.id, icon.label)}
+              className="flex flex-col items-center gap-1 p-2 rounded hover:bg-blue-400/30 transition-colors group"
+            >
+              <div className="w-12 h-12 bg-white/90 rounded border-2 border-gray-300 flex items-center justify-center shadow-lg">
+                <IconComponent className="w-8 h-8" style={{ color: icon.color }} />
+              </div>
+              <span className="text-white text-xs font-bold drop-shadow-md text-center max-w-[80px]">
+                {icon.label}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Windows */}
-      {windows.map(w =>
-        !w.isMinimized && (
-          <XPWindow
-            key={w.id}
-            title={w.title}
-            onClose={() => closeWindow(w.id)}
-            onMinimize={() => minimizeWindow(w.id)}
-            onMaximize={() => maximizeWindow(w.id)}
-            isActive={topWindowId === w.id}
-            isMaximized={w.isMaximized}
-            defaultPosition={w.defaultPosition}
-            defaultSize={w.defaultSize}
-            onFocus={() => bringToFront(w.id)}
-          >
-            {w.content}
-          </XPWindow>
-        )
+      {windows.map(
+        (w) =>
+          !w.isMinimized && (
+            <XPWindow
+              key={w.id}
+              window={w}
+              isActive={topWindowId === w.id}
+              onClose={() => closeWindow(w.id)}
+              onMinimize={() => minimizeWindow(w.id)}
+              onMaximize={() => maximizeWindow(w.id)}
+              onFocus={() => bringToFront(w.id)}
+            />
+          )
       )}
 
       {/* Start Menu */}
       {showStartMenu && (
-        <StartMenu
-          onOpenWindow={openWindow}
-          onClose={() => setShowStartMenu(false)}
-        />
+        <div className="absolute bottom-12 left-0 w-64 bg-gradient-to-b from-blue-500 to-blue-700 border-2 border-blue-800 shadow-2xl rounded-tr-lg z-50">
+          <div className="p-4 space-y-2">
+            {desktopIcons.map((icon) => {
+              const IconComponent = icon.icon;
+              return (
+                <button
+                  key={icon.id}
+                  onClick={() => {
+                    openWindow(icon.id, icon.label);
+                    setShowStartMenu(false);
+                  }}
+                  className="w-full flex items-center gap-3 p-2 text-white hover:bg-blue-600 rounded"
+                >
+                  <IconComponent className="w-5 h-5" />
+                  <span className="text-sm">{icon.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
       )}
 
       {/* Taskbar */}
-      <Taskbar
-        openWindows={windows.map(w => ({ id: w.id, title: w.title, icon: undefined }))}
-        activeWindowId={topWindowId}
-        onTaskClick={handleTaskClick}
-        onStartClick={() => setShowStartMenu(prev => !prev)}
-      />
+      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-b from-[#245EDC] to-[#1941A5] border-t-2 border-[#3F8CF3] shadow-lg flex items-center px-2 gap-2 z-40">
+        <button
+          onClick={() => setShowStartMenu((prev) => !prev)}
+          className="px-4 py-1 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white font-bold rounded border-2 border-green-800 shadow-md flex items-center gap-2"
+        >
+          <span className="text-lg">⊞</span> Start
+        </button>
+
+        <div className="flex-1 flex gap-1">
+          {windows.map((w) => (
+            <button
+              key={w.id}
+              onClick={() => handleTaskClick(w.id)}
+              className={`px-3 py-1 text-sm font-semibold rounded border-2 transition-all ${
+                topWindowId === w.id
+                  ? "bg-gradient-to-b from-blue-400 to-blue-600 border-blue-700 text-white"
+                  : "bg-gradient-to-b from-blue-200 to-blue-300 border-blue-400 text-gray-800"
+              }`}
+            >
+              {w.title}
+            </button>
+          ))}
+        </div>
+
+        <div className="px-3 py-1 bg-blue-400 rounded text-white text-xs font-bold border border-blue-600">
+          {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// XP Window Component
+function XPWindow({ window: w, isActive, onClose, onMinimize, onMaximize, onFocus }) {
+  const [position, setPosition] = useState(w.defaultPosition);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+
+  const handleMouseDown = (e) => {
+    if (e.target.closest("button")) return;
+    setIsDragging(true);
+    setDragStart({
+      x: e.clientX - position.x,
+      y: e.clientY - position.y,
+    });
+    onFocus();
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    setPosition({
+      x: e.clientX - dragStart.x,
+      y: e.clientY - dragStart.y,
+    });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
+
+  return (
+    <div
+      className="absolute bg-white border-2 border-gray-400 shadow-2xl rounded"
+      style={{
+        left: w.isMaximized ? 0 : position.x,
+        top: w.isMaximized ? 0 : position.y,
+        width: w.isMaximized ? "100%" : w.defaultSize.width,
+        height: w.isMaximized ? "calc(100% - 48px)" : w.defaultSize.height,
+        zIndex: w.zIndex,
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+    >
+      {/* Title Bar */}
+      <div
+        className={`h-8 flex items-center justify-between px-2 cursor-move rounded-t ${
+          isActive
+            ? "bg-gradient-to-r from-[#0054E3] to-[#0078D7]"
+            : "bg-gradient-to-r from-gray-400 to-gray-500"
+        }`}
+        onMouseDown={handleMouseDown}
+      >
+        <span className="text-white font-bold text-sm">{w.title}</span>
+        <div className="flex gap-1">
+          <button
+            onClick={onMinimize}
+            className="w-5 h-5 bg-blue-500 hover:bg-blue-600 border border-blue-700 rounded-sm flex items-center justify-center text-white text-xs font-bold"
+          >
+            _
+          </button>
+          <button
+            onClick={onMaximize}
+            className="w-5 h-5 bg-blue-500 hover:bg-blue-600 border border-blue-700 rounded-sm flex items-center justify-center text-white text-xs font-bold"
+          >
+            □
+          </button>
+          <button
+            onClick={onClose}
+            className="w-5 h-5 bg-red-500 hover:bg-red-600 border border-red-700 rounded-sm flex items-center justify-center text-white text-xs font-bold"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="h-[calc(100%-2rem)] overflow-auto">{w.content}</div>
     </div>
   );
 }
