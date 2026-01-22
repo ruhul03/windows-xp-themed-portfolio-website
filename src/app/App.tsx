@@ -18,46 +18,135 @@ export default function App() {
   const [windows, setWindows] = useState<WindowType[]>([]);
   const [showStartMenu, setShowStartMenu] = useState(false);
   const [zCounter, setZCounter] = useState(50);
+  const [isTurnOffOpen, setIsTurnOffOpen] = useState(false);
+  const [isLogOffOpen, setIsLogOffOpen] = useState(false);
 
   const getWindowContent = (id: string) => {
     switch (id) {
-      case "about":
+      case "documents":
         return (
-          <div className="p-6 bg-white h-full overflow-auto">
-            <h2 className="text-2xl font-bold text-[#0054E3] mb-4">About Me</h2>
-            <p className="text-gray-700 leading-relaxed">
-              Welcome to my Windows XP themed portfolio! I'm a passionate developer
-              who loves creating nostalgic experiences.
-            </p>
-          </div>
+          <ExplorerWindow
+            title="My Documents"
+            icon={FileText}
+            items={[
+              { name: "Resume.pdf", type: "PDF File" },
+              { name: "Project Specs.docx", type: "Word Document" },
+              { name: "Notes.txt", type: "Text Document" },
+            ]}
+          />
         );
-      case "projects":
+      case "pictures":
         return (
-          <div className="p-6 bg-white h-full overflow-auto">
-            <h2 className="text-2xl font-bold text-[#0054E3] mb-4">My Projects</h2>
-            <p className="text-gray-700">View my latest projects here.</p>
-          </div>
+          <ExplorerWindow
+            title="My Pictures"
+            icon={FolderOpen}
+            items={[
+              { name: "Wallpaper.jpg", type: "JPEG Image" },
+              { name: "Screenshot.png", type: "PNG Image" },
+            ]}
+          />
         );
-      case "skills":
+      case "music":
         return (
-          <div className="p-6 bg-white h-full overflow-auto">
-            <h2 className="text-2xl font-bold text-[#0054E3] mb-4">Skills</h2>
-            <p className="text-gray-700">My technical skills and expertise.</p>
-          </div>
+          <ExplorerWindow
+            title="My Music"
+            icon={Volume2}
+            items={[
+              { name: "Beethoven's Symphony No. 9", type: "MP3 File" },
+              { name: "New Stories (Highway Blues)", type: "WMA File" },
+            ]}
+          />
         );
-      case "contact":
+      case "control-panel":
         return (
-          <div className="p-6 bg-white h-full overflow-auto">
-            <h2 className="text-2xl font-bold text-[#0054E3] mb-4">Contact</h2>
-            <p className="text-gray-700">Get in touch with me.</p>
-          </div>
+          <ExplorerWindow
+            title="Control Panel"
+            icon={Monitor}
+            items={[
+              { name: "Display", type: "System Setting" },
+              { name: "Add or Remove Programs", type: "System Setting" },
+              { name: "User Accounts", type: "System Setting" },
+            ]}
+          />
         );
       default:
-        return (
-          <div className="p-6 bg-white h-full">
-            <h2 className="text-xl font-bold">Welcome to Windows XP Portfolio</h2>
-          </div>
-        );
+        // Use the existing content logic for about/projects/skills/contact
+        switch (id) {
+          case "about":
+            return (
+              <div className="p-6 bg-white h-full overflow-auto text-sm">
+                <h2 className="text-xl font-bold text-[#0054E3] mb-4">About Me</h2>
+                <div className="flex gap-4">
+                  <div className="w-24 h-24 bg-gray-200 border border-gray-400 flex items-center justify-center shrink-0">
+                    <User className="w-12 h-12 text-gray-500" />
+                  </div>
+                  <div>
+                    <p className="text-gray-800 leading-relaxed mb-4">
+                      Welcome to my Windows XP themed portfolio! I'm a passionate developer
+                      who loves creating nostalgic experiences.
+                    </p>
+                    <p className="text-gray-800">
+                      I specialize in modern web technologies while keeping the spirit of the classic web alive.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            );
+          case "projects":
+            return (
+              <div className="p-6 bg-white h-full overflow-auto">
+                <h2 className="text-xl font-bold text-[#0054E3] mb-4">My Projects</h2>
+                <ul className="list-disc pl-5 space-y-2 text-gray-800 text-sm">
+                  <li><strong>Portfolio Website:</strong> You're looking at it! React + Tailwind.</li>
+                  <li><strong>E-commerce Platform:</strong> A full-stack Next.js application.</li>
+                  <li><strong>Chat App:</strong> Real-time messaging with Socket.io.</li>
+                </ul>
+              </div>
+            );
+          case "skills":
+            return (
+              <div className="p-6 bg-white h-full overflow-auto">
+                <h2 className="text-xl font-bold text-[#0054E3] mb-4">Skills</h2>
+                <div className="grid grid-cols-2 gap-4 text-sm text-gray-800">
+                  <div>
+                    <h3 className="font-bold mb-2 border-b border-gray-300">Frontend</h3>
+                    <ul className="list-disc pl-5">
+                      <li>React / Next.js</li>
+                      <li>TypeScript</li>
+                      <li>Tailwind CSS</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <h3 className="font-bold mb-2 border-b border-gray-300">Backend</h3>
+                    <ul className="list-disc pl-5">
+                      <li>Node.js</li>
+                      <li>Python</li>
+                      <li>PostgreSQL</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            );
+          case "contact":
+            return (
+              <div className="p-6 bg-white h-full overflow-auto">
+                <h2 className="text-xl font-bold text-[#0054E3] mb-4">Contact</h2>
+                <p className="text-gray-800 text-sm mb-4">Feel free to reach out!</p>
+                <div className="space-y-2 text-sm text-gray-800">
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-[#0054E3]" />
+                    <span>email@example.com</span>
+                  </div>
+                </div>
+              </div>
+            );
+          default:
+            return (
+              <div className="p-6 bg-white h-full">
+                <h2 className="text-xl font-bold">Welcome to Windows XP Portfolio</h2>
+              </div>
+            );
+        }
     }
   };
 
@@ -221,17 +310,17 @@ export default function App() {
 
             {/* Right Column (Blue) */}
             <div className="flex-1 bg-[#D3E5FA] border-l border-[#95BDEB] flex flex-col p-1 gap-1">
-              <button className="h-[28px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
+              <button onClick={() => { openWindow("documents", "My Documents"); setShowStartMenu(false); }} className="h-[28px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
                 <span className="text-[11px] font-bold text-[#00136B] group-hover:text-white">My Documents</span>
               </button>
-              <button className="h-[28px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
+              <button onClick={() => { openWindow("pictures", "My Pictures"); setShowStartMenu(false); }} className="h-[28px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
                 <span className="text-[11px] font-bold text-[#00136B] group-hover:text-white">My Pictures</span>
               </button>
-              <button className="h-[28px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
+              <button onClick={() => { openWindow("music", "My Music"); setShowStartMenu(false); }} className="h-[28px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
                 <span className="text-[11px] font-bold text-[#00136B] group-hover:text-white">My Music</span>
               </button>
               <div className="h-[1px] bg-[#AECBF2] w-[90%] self-center my-0.5"></div>
-              <button className="h-[28px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
+              <button onClick={() => { openWindow("control-panel", "Control Panel"); setShowStartMenu(false); }} className="h-[28px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
                 <span className="text-[11px] font-bold text-[#00136B] group-hover:text-white">Control Panel</span>
               </button>
               <button onClick={() => { openWindow("computer", "My Computer"); setShowStartMenu(false); }} className="h-[28px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
@@ -242,14 +331,72 @@ export default function App() {
 
           {/* Footer */}
           <div className="h-[40px] bg-gradient-to-b from-[#3883E6] to-[#3A84E5] flex items-center justify-end px-3 gap-3 shadow-[inset_0px_2px_2px_rgba(0,0,0,0.1)] border-t-[2px] border-[#F79633]">
-            <button className="flex items-center gap-1 text-white hover:text-gray-100 transition-colors">
+            <button
+              onClick={() => { setShowStartMenu(false); setIsLogOffOpen(true); }}
+              className="flex items-center gap-1 text-white hover:text-gray-100 transition-colors"
+            >
               <div className="p-1 bg-[#E58C36] rounded-[2px] shadow-sm border border-white/30"><LogOut className="w-3 h-3" /></div>
               <span className="text-[10px]">Log Off</span>
             </button>
-            <button className="flex items-center gap-1 text-white hover:text-gray-100 transition-colors">
+            <button
+              onClick={() => { setShowStartMenu(false); setIsTurnOffOpen(true); }}
+              className="flex items-center gap-1 text-white hover:text-gray-100 transition-colors"
+            >
               <div className="p-1 bg-[#DE4933] rounded-[2px] shadow-sm border border-white/30"><Power className="w-3 h-3" /></div>
               <span className="text-[10px]">Turn Off Computer</span>
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Turn Off Dialog */}
+      {isTurnOffOpen && (
+        <div className="absolute inset-0 z-[100] flex items-center justify-center">
+          {/* Fade overlay */}
+          <div className="absolute inset-0 bg-black/50 animate-in fade-in duration-1000"></div>
+
+          {/* Dialog */}
+          <div className="relative z-10 w-[350px] bg-[#003399] p-[2px] rounded-lg shadow-2xl animate-in zoom-in-95 duration-200">
+            <div className="bg-gradient-to-b from-[#003399] to-[#003399] p-1 rounded-t-lg flex justify-between items-center px-2">
+              <span className="text-white font-bold text-lg">Turn off computer</span>
+              <div className="text-white/60">Windows <span className="text-[#FF6600] font-bold">xp</span></div>
+            </div>
+            <div className="bg-[#D4D0C8] p-6 rounded-b-lg flex justify-center gap-8 border-t-2 border-[#5473CE]">
+              <div className="flex flex-col items-center gap-2 group cursor-pointer" onClick={() => setIsTurnOffOpen(false)}>
+                <div className="w-8 h-8 bg-[#3B9C2D] rounded-full border-2 border-white/50 shadow-md flex items-center justify-center group-hover:brightness-110">
+                  <div className="w-2 h-4 border-l-2 border-white/80"></div>
+                </div>
+                <span className="text-xs font-tahoma">Standby</span>
+              </div>
+              <div className="flex flex-col items-center gap-2 group cursor-pointer" onClick={() => window.location.reload()}>
+                <div className="w-8 h-8 bg-[#DA3A27] rounded-full border-2 border-white/50 shadow-md flex items-center justify-center group-hover:brightness-110">
+                  <Power className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-xs font-tahoma">Turn Off</span>
+              </div>
+              <div className="flex flex-col items-center gap-2 group cursor-pointer" onClick={() => window.location.reload()}>
+                <div className="w-8 h-8 bg-[#E6B223] rounded-full border-2 border-white/50 shadow-md flex items-center justify-center group-hover:brightness-110">
+                  <div className="w-3 h-3 border-r-2 border-t-2 border-white/80 rotate-45 rounded-sm"></div>
+                </div>
+                <span className="text-xs font-tahoma">Restart</span>
+              </div>
+            </div>
+            <div className="bg-[#D4D0C8] p-2 flex justify-end">
+              <button className="px-4 py-1 border border-gray-500 bg-gray-200 text-black text-xs shadow-sm hover:bg-white" onClick={() => setIsTurnOffOpen(false)}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Log Off Dialog - Simple placeholder for now */}
+      {isLogOffOpen && (
+        <div className="absolute inset-0 z-[100] bg-black/40 flex items-center justify-center">
+          <div className="w-[300px] h-[150px] bg-[#003399] flex flex-col items-center justify-center rounded-lg shadow-xl animate-in zoom-in-95 duration-200 border-2 border-white/40">
+            <p className="text-white mb-4">Are you sure you want to log off?</p>
+            <div className="flex gap-4">
+              <button className="px-4 py-1 bg-green-600 text-white rounded border border-green-400 hover:bg-green-500" onClick={() => window.location.reload()}>Log Off</button>
+              <button className="px-4 py-1 bg-red-600 text-white rounded border border-red-400 hover:bg-red-500" onClick={() => setIsLogOffOpen(false)}>Cancel</button>
+            </div>
           </div>
         </div>
       )}
@@ -375,11 +522,49 @@ function XPWindow({ window: w, isActive, onClose, onMinimize, onMaximize, onFocu
       </div>
 
       {/* Content Area */}
-      <div className="flex-1 bg-[#ECE9D8] p-[1px]">
-        <div className="w-full h-full bg-white overflow-auto border border-[#828790]">
+      <div className="flex-1 bg-[#ECE9D8] p-[3px] flex flex-col gap-1">
+        {/* Menu Bar (Fake) */}
+        <div className="h-6 bg-[#EBE9D8] flex items-center px-1 text-sm border-b border-white shadow-sm">
+          <span className="px-2 hover:bg-[#1660E8] hover:text-white cursor-default">File</span>
+          <span className="px-2 hover:bg-[#1660E8] hover:text-white cursor-default">Edit</span>
+          <span className="px-2 hover:bg-[#1660E8] hover:text-white cursor-default">View</span>
+          <span className="px-2 hover:bg-[#1660E8] hover:text-white cursor-default">Favorites</span>
+          <span className="px-2 hover:bg-[#1660E8] hover:text-white cursor-default">Tools</span>
+          <span className="px-2 hover:bg-[#1660E8] hover:text-white cursor-default">Help</span>
+        </div>
+        {/* Toolbar (Fake) */}
+        <div className="h-8 bg-[#EBE9D8] border-b border-gray-400 flex items-center px-2 gap-2">
+          <div className="flex gap-1">
+            <div className="w-6 h-6 rounded-full bg-green-500 border border-green-700 flex items-center justify-center text-white text-[10px]">←</div>
+            <div className="w-6 h-6 rounded-full bg-green-500 border border-green-700 flex items-center justify-center text-white text-[10px]">→</div>
+          </div>
+          <div className="h-4 w-[1px] bg-gray-400 mx-1"></div>
+          <div className="px-2 py-0.5 bg-white border border-gray-400 text-xs w-[200px] flex items-center text-gray-700">Address: C:\{w.title}</div>
+        </div>
+        {/* Main Content */}
+        <div className="flex-1 bg-white overflow-auto border-2 border-inset border-[#828790] shadow-inner p-2">
           {w.content}
         </div>
       </div>
     </div>
   );
+}
+
+// Generic Explorer Window Component
+function ExplorerWindow({ title, icon, items }: { title: string, icon: any, items: { name: string, type: string }[] }) {
+  const Icon = icon;
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Fake Sidebar + Content logic could go here, for now simpler grid */}
+      <div className="grid grid-cols-4 gap-4">
+        {items.map((item, i) => (
+          <div key={i} className="flex flex-col items-center gap-1 group w-20 cursor-default">
+            <Icon className="w-10 h-10 text-yellow-500 drop-shadow-sm" />
+            <span className="text-[11px] text-center text-gray-700 group-hover:bg-[#316AC5] group-hover:text-white px-1 leading-tight">{item.name}</span>
+            <span className="text-[9px] text-gray-400 group-hover:text-blue-200">{item.type}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
