@@ -440,14 +440,23 @@ export default function App() {
   );
 }
 
-// XP Window Component
-function XPWindow({ window: w, isActive, onClose, onMinimize, onMaximize, onFocus }) {
+interface XPWindowProps {
+  window: WindowType;
+  isActive: boolean;
+  onClose: () => void;
+  onMinimize: () => void;
+  onMaximize: () => void;
+  onFocus: () => void;
+}
+
+// XPWindow Component
+function XPWindow({ window: w, isActive, onClose, onMinimize, onMaximize, onFocus }: XPWindowProps) {
   const [position, setPosition] = useState(w.defaultPosition);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
-  const handleMouseDown = (e) => {
-    if (e.target.closest("button")) return;
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest("button")) return;
     setIsDragging(true);
     setDragStart({
       x: e.clientX - position.x,
@@ -456,7 +465,7 @@ function XPWindow({ window: w, isActive, onClose, onMinimize, onMaximize, onFocu
     onFocus();
   };
 
-  const handleMouseMove = (e) => {
+  const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging) return;
     setPosition({
       x: e.clientX - dragStart.x,
