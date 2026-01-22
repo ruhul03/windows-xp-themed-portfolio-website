@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { User, FolderOpen, FileText, Mail, Monitor } from "lucide-react";
+import { User, FolderOpen, FileText, Mail, Monitor, LogOut, Power, Volume2, Wifi } from "lucide-react";
+import blissBg from "../assets/bliss.jpg";
 
 interface WindowType {
   id: string;
@@ -139,9 +140,11 @@ export default function App() {
 
   return (
     <div
-      className="w-full h-screen relative overflow-hidden bg-[#5A8FCC]"
+      className="w-full h-screen relative overflow-hidden bg-[#5A8FCC] font-tahoma select-none"
       style={{
-        backgroundImage: `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080"><rect fill="%235A8FCC" width="1920" height="1080"/></svg>')`,
+        backgroundImage: `url(${blissBg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
       }}
     >
       {/* Desktop Icons */}
@@ -183,24 +186,70 @@ export default function App() {
 
       {/* Start Menu */}
       {showStartMenu && (
-        <div className="absolute bottom-12 left-0 w-64 bg-gradient-to-b from-blue-500 to-blue-700 border-2 border-blue-800 shadow-2xl rounded-tr-lg z-50">
-          <div className="p-4 space-y-2">
-            {desktopIcons.map((icon) => {
-              const IconComponent = icon.icon;
-              return (
-                <button
-                  key={icon.id}
-                  onClick={() => {
-                    openWindow(icon.id, icon.label);
-                    setShowStartMenu(false);
-                  }}
-                  className="w-full flex items-center gap-3 p-2 text-white hover:bg-blue-600 rounded"
-                >
-                  <IconComponent className="w-5 h-5" />
-                  <span className="text-sm">{icon.label}</span>
-                </button>
-              );
-            })}
+        <div className="absolute bottom-[30px] left-0 w-[380px] h-[480px] bg-white rounded-tr-[5px] rounded-tl-[5px] shadow-2xl flex flex-col z-[60] overflow-hidden animate-in slide-in-from-bottom-5 fade-in duration-200" style={{ boxShadow: "2px 0px 10px rgba(0,0,0,0.5)" }}>
+          {/* Header */}
+          <div className="h-[60px] bg-gradient-to-b from-[#1571DE] to-[#2083E9] flex items-center px-2 shadow-[inset_0px_2px_2px_rgba(255,255,255,0.3)] border-b-[2px] border-[#3881E2]">
+            <div className="w-[44px] h-[44px] rounded-[3px] bg-white border-[2px] border-white/40 overflow-hidden shadow-md flex items-center justify-center relative">
+              <User className="w-8 h-8 text-[#1571DE] opacity-80" />
+            </div>
+            <span className="text-white font-bold text-[16px] ml-3 drop-shadow-md">Guest</span>
+          </div>
+
+          {/* Body */}
+          <div className="flex-1 flex border-t border-[#F79633]">
+            {/* Left Column (White) */}
+            <div className="w-[190px] bg-white flex flex-col p-1 gap-1">
+              {desktopIcons.slice(0, 4).map(icon => {
+                const Icon = icon.icon;
+                return (
+                  <button key={icon.id} onClick={() => { openWindow(icon.id, icon.label); setShowStartMenu(false); }} className="h-[36px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
+                    <Icon className="w-6 h-6 text-gray-600 group-hover:text-white mr-2" />
+                    <div className="flex flex-col items-start">
+                      <span className="text-[11px] font-bold text-gray-800 group-hover:text-white">{icon.label}</span>
+                      <span className="text-[9px] text-gray-500 group-hover:text-white/80">Application</span>
+                    </div>
+                  </button>
+                )
+              })}
+              <div className="flex-1"></div>
+              <div className="h-[1px] bg-gradient-to-r from-transparent via-gray-300 to-transparent my-1"></div>
+              <button className="h-[36px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
+                <span className="font-bold text-[11px] ml-1">All Programs</span>
+                <div className="ml-auto bg-[#239B28] rounded-full p-[2px]"><div className="w-0 h-0 border-l-[4px] border-l-white border-y-[3px] border-y-transparent"></div></div>
+              </button>
+            </div>
+
+            {/* Right Column (Blue) */}
+            <div className="flex-1 bg-[#D3E5FA] border-l border-[#95BDEB] flex flex-col p-1 gap-1">
+              <button className="h-[28px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
+                <span className="text-[11px] font-bold text-[#00136B] group-hover:text-white">My Documents</span>
+              </button>
+              <button className="h-[28px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
+                <span className="text-[11px] font-bold text-[#00136B] group-hover:text-white">My Pictures</span>
+              </button>
+              <button className="h-[28px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
+                <span className="text-[11px] font-bold text-[#00136B] group-hover:text-white">My Music</span>
+              </button>
+              <div className="h-[1px] bg-[#AECBF2] w-[90%] self-center my-0.5"></div>
+              <button className="h-[28px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
+                <span className="text-[11px] font-bold text-[#00136B] group-hover:text-white">Control Panel</span>
+              </button>
+              <button onClick={() => { openWindow("computer", "My Computer"); setShowStartMenu(false); }} className="h-[28px] flex items-center px-2 hover:bg-[#316AC5] hover:text-white group rounded-sm transition-colors">
+                <span className="text-[11px] font-bold text-[#00136B] group-hover:text-white">My Computer</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="h-[40px] bg-gradient-to-b from-[#3883E6] to-[#3A84E5] flex items-center justify-end px-3 gap-3 shadow-[inset_0px_2px_2px_rgba(0,0,0,0.1)] border-t-[2px] border-[#F79633]">
+            <button className="flex items-center gap-1 text-white hover:text-gray-100 transition-colors">
+              <div className="p-1 bg-[#E58C36] rounded-[2px] shadow-sm border border-white/30"><LogOut className="w-3 h-3" /></div>
+              <span className="text-[10px]">Log Off</span>
+            </button>
+            <button className="flex items-center gap-1 text-white hover:text-gray-100 transition-colors">
+              <div className="p-1 bg-[#DE4933] rounded-[2px] shadow-sm border border-white/30"><Power className="w-3 h-3" /></div>
+              <span className="text-[10px]">Turn Off Computer</span>
+            </button>
           </div>
         </div>
       )}
@@ -221,8 +270,8 @@ export default function App() {
               key={w.id}
               onClick={() => handleTaskClick(w.id)}
               className={`px-2 h-[22px] min-w-[120px] max-w-[150px] text-[11px] text-left rounded-[3px] transition-all flex items-center truncate ${topWindowId === w.id
-                  ? "bg-[#1E52B7] text-white shadow-[inset_1px_1px_2px_rgba(0,0,0,0.5)]"
-                  : "bg-[#3C81F3] text-white hover:bg-[#5392F7] shadow-[1px_1px_1px_rgba(0,0,0,0.3)]"
+                ? "bg-[#1E52B7] text-white shadow-[inset_1px_1px_2px_rgba(0,0,0,0.5)]"
+                : "bg-[#3C81F3] text-white hover:bg-[#5392F7] shadow-[1px_1px_1px_rgba(0,0,0,0.3)]"
                 }`}
             >
               {w.title}
@@ -230,8 +279,12 @@ export default function App() {
           ))}
         </div>
 
-        <div className="h-full bg-[#0B77E9] px-4 flex items-center border-l border-[#1941A5] shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3)]">
-          <div className="text-white text-xs font-normal">
+        <div className="h-full bg-[#0B77E9] px-2 flex items-center border-l border-[#1941A5] shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3)] gap-2">
+          <div className="flex gap-1 px-1">
+            <Wifi className="w-3.5 h-3.5 text-white/90 drop-shadow-sm" />
+            <Volume2 className="w-3.5 h-3.5 text-white/90 drop-shadow-sm" />
+          </div>
+          <div className="text-white text-[11px] font-normal px-1">
             {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
           </div>
         </div>
@@ -288,8 +341,8 @@ function XPWindow({ window: w, isActive, onClose, onMinimize, onMaximize, onFocu
       {/* Title Bar */}
       <div
         className={`h-[30px] flex items-center justify-between px-2 cursor-move rounded-t-[5px] relative overflow-hidden ${isActive
-            ? "bg-gradient-to-b from-[#0058EE] via-[#3593FF] to-[#288EFF]"
-            : "bg-gradient-to-b from-[#7697E7] via-[#7C9EEB] to-[#7F9FEF]"
+          ? "bg-gradient-to-b from-[#0058EE] via-[#3593FF] to-[#288EFF]"
+          : "bg-gradient-to-b from-[#7697E7] via-[#7C9EEB] to-[#7F9FEF]"
           }`}
         onMouseDown={handleMouseDown}
       >
