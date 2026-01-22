@@ -130,11 +130,11 @@ export default function App() {
   const topWindowId =
     windows.length > 0
       ? windows.reduce((topId, w) =>
-          w.zIndex > (windows.find((win) => win.id === topId)?.zIndex || 0)
-            ? w.id
-            : topId,
-          windows[0].id
-        )
+        w.zIndex > (windows.find((win) => win.id === topId)?.zIndex || 0)
+          ? w.id
+          : topId,
+        windows[0].id
+      )
       : null;
 
   return (
@@ -152,12 +152,12 @@ export default function App() {
             <button
               key={icon.id}
               onClick={() => openWindow(icon.id, icon.label)}
-              className="flex flex-col items-center gap-1 p-2 rounded hover:bg-blue-400/30 transition-colors group"
+              className="flex flex-col items-center gap-1 p-2 rounded hover:bg-blue-400/30 transition-colors group w-20"
             >
-              <div className="w-12 h-12 bg-white/90 rounded border-2 border-gray-300 flex items-center justify-center shadow-lg">
-                <IconComponent className="w-8 h-8" style={{ color: icon.color }} />
+              <div className="w-10 h-10 mb-1 relative">
+                <IconComponent className="w-full h-full drop-shadow-xl" style={{ color: icon.color }} />
               </div>
-              <span className="text-white text-xs font-bold drop-shadow-md text-center max-w-[80px]">
+              <span className="text-white text-[11px] font-normal drop-shadow-[1px_1px_1px_rgba(0,0,0,1)] text-center leading-tight">
                 {icon.label}
               </span>
             </button>
@@ -206,32 +206,34 @@ export default function App() {
       )}
 
       {/* Taskbar */}
-      <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-b from-[#245EDC] to-[#1941A5] border-t-2 border-[#3F8CF3] shadow-lg flex items-center px-2 gap-2 z-40">
+      <div className="absolute bottom-0 left-0 right-0 h-[30px] bg-[#245EDC] border-t-2 border-[#3F8CF3] flex items-center px-0 z-50">
         <button
           onClick={() => setShowStartMenu((prev) => !prev)}
-          className="px-4 py-1 bg-gradient-to-b from-green-500 to-green-700 hover:from-green-600 hover:to-green-800 text-white font-bold rounded border-2 border-green-800 shadow-md flex items-center gap-2"
+          className="h-full pl-2 pr-4 bg-gradient-to-b from-[#3E9F3D] to-[#258522] hover:from-[#45B243] hover:to-[#2B9627] text-white font-bold rounded-r-[10px] shadow-[1px_0px_2px_rgba(0,0,0,0.5)] flex items-center gap-1 mr-2 italic border-none outline-none"
         >
-          <span className="text-lg">⊞</span> Start
+          <span className="text-lg drop-shadow-md">❖</span>
+          <span className="text-shadow-sm font-sans">Start</span>
         </button>
 
-        <div className="flex-1 flex gap-1">
+        <div className="flex-1 flex gap-1 px-1 h-full items-center">
           {windows.map((w) => (
             <button
               key={w.id}
               onClick={() => handleTaskClick(w.id)}
-              className={`px-3 py-1 text-sm font-semibold rounded border-2 transition-all ${
-                topWindowId === w.id
-                  ? "bg-gradient-to-b from-blue-400 to-blue-600 border-blue-700 text-white"
-                  : "bg-gradient-to-b from-blue-200 to-blue-300 border-blue-400 text-gray-800"
-              }`}
+              className={`px-2 h-[22px] min-w-[120px] max-w-[150px] text-[11px] text-left rounded-[3px] transition-all flex items-center truncate ${topWindowId === w.id
+                  ? "bg-[#1E52B7] text-white shadow-[inset_1px_1px_2px_rgba(0,0,0,0.5)]"
+                  : "bg-[#3C81F3] text-white hover:bg-[#5392F7] shadow-[1px_1px_1px_rgba(0,0,0,0.3)]"
+                }`}
             >
               {w.title}
             </button>
           ))}
         </div>
 
-        <div className="px-3 py-1 bg-blue-400 rounded text-white text-xs font-bold border border-blue-600">
-          {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+        <div className="h-full bg-[#0B77E9] px-4 flex items-center border-l border-[#1941A5] shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3)]">
+          <div className="text-white text-xs font-normal">
+            {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+          </div>
         </div>
       </div>
     </div>
@@ -268,52 +270,63 @@ function XPWindow({ window: w, isActive, onClose, onMinimize, onMaximize, onFocu
 
   return (
     <div
-      className="absolute bg-white border-2 border-gray-400 shadow-2xl rounded"
+      className={`absolute flex flex-col rounded-t-[8px] shadow-2xl p-[3px] pb-[2px] ${isActive ? "z-50" : "z-40"
+        }`}
       style={{
         left: w.isMaximized ? 0 : position.x,
         top: w.isMaximized ? 0 : position.y,
         width: w.isMaximized ? "100%" : w.defaultSize.width,
-        height: w.isMaximized ? "calc(100% - 48px)" : w.defaultSize.height,
+        height: w.isMaximized ? "calc(100% - 30px)" : w.defaultSize.height,
+        backgroundColor: "#0054E3", // The distinct XP blue border color
         zIndex: w.zIndex,
       }}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      onClick={onFocus}
     >
       {/* Title Bar */}
       <div
-        className={`h-8 flex items-center justify-between px-2 cursor-move rounded-t ${
-          isActive
-            ? "bg-gradient-to-r from-[#0054E3] to-[#0078D7]"
-            : "bg-gradient-to-r from-gray-400 to-gray-500"
-        }`}
+        className={`h-[30px] flex items-center justify-between px-2 cursor-move rounded-t-[5px] relative overflow-hidden ${isActive
+            ? "bg-gradient-to-b from-[#0058EE] via-[#3593FF] to-[#288EFF]"
+            : "bg-gradient-to-b from-[#7697E7] via-[#7C9EEB] to-[#7F9FEF]"
+          }`}
         onMouseDown={handleMouseDown}
       >
-        <span className="text-white font-bold text-sm">{w.title}</span>
-        <div className="flex gap-1">
+        <div className="text-white font-bold text-[13px] px-1 drop-shadow-[1px_1px_0_rgba(0,0,0,0.3)] truncate flex-1 pointer-events-none select-none" style={{ fontFamily: 'Tahoma, sans-serif' }}>
+          {w.title}
+        </div>
+
+        <div className="flex gap-1 ml-2">
           <button
-            onClick={onMinimize}
-            className="w-5 h-5 bg-blue-500 hover:bg-blue-600 border border-blue-700 rounded-sm flex items-center justify-center text-white text-xs font-bold"
+            onClick={(e) => { e.stopPropagation(); onMinimize(); }}
+            className="w-[21px] h-[21px] bg-[#2257D5] rounded-[3px] border border-white/60 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.5),1px_1px_1px_rgba(0,0,0,0.3)] flex items-center justify-center hover:brightness-110 active:brightness-90 opacity-80 hover:opacity-100"
           >
-            _
+            <div className="w-2 h-1 bg-white rounded-sm mt-1"></div>
           </button>
           <button
-            onClick={onMaximize}
-            className="w-5 h-5 bg-blue-500 hover:bg-blue-600 border border-blue-700 rounded-sm flex items-center justify-center text-white text-xs font-bold"
+            onClick={(e) => { e.stopPropagation(); onMaximize(); }}
+            className="w-[21px] h-[21px] bg-[#2257D5] rounded-[3px] border border-white/60 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.5),1px_1px_1px_rgba(0,0,0,0.3)] flex items-center justify-center hover:brightness-110 active:brightness-90 opacity-80 hover:opacity-100"
           >
-            □
+            <div className="w-2.5 h-2.5 border-[2px] border-white rounded-sm"></div>
           </button>
           <button
-            onClick={onClose}
-            className="w-5 h-5 bg-red-500 hover:bg-red-600 border border-red-700 rounded-sm flex items-center justify-center text-white text-xs font-bold"
+            onClick={(e) => { e.stopPropagation(); onClose(); }}
+            className="w-[21px] h-[21px] bg-[#E05333] rounded-[3px] border border-white/60 shadow-[inset_1px_1px_2px_rgba(255,255,255,0.5),1px_1px_1px_rgba(0,0,0,0.3)] flex items-center justify-center hover:brightness-110 active:brightness-90"
           >
-            ×
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L9 9M9 1L1 9" stroke="white" strokeWidth="2" strokeLinecap="round" />
+            </svg>
           </button>
         </div>
       </div>
 
-      {/* Content */}
-      <div className="h-[calc(100%-2rem)] overflow-auto">{w.content}</div>
+      {/* Content Area */}
+      <div className="flex-1 bg-[#ECE9D8] p-[1px]">
+        <div className="w-full h-full bg-white overflow-auto border border-[#828790]">
+          {w.content}
+        </div>
+      </div>
     </div>
   );
 }
