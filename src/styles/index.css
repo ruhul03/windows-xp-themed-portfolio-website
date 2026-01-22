@@ -1,7 +1,41 @@
 @import './fonts.css';
-@import './tailwind.css';
 @import './theme.css';
 
-:root {
-    font-family: 'Tahoma', 'Verdana', 'Segoe', sans-serif;
+.bg-windows-logo {
+    background-image: linear-gradient(45deg, #f35325 50%, #81bc06 50%);
+    background-size: 100% 100%;
+}
+
+/* Note: The real XP logo is more complex, but for a small icon, a 4-color grid or similar approximation is better. 
+   Let's do a proper 4-color grid using CSS gradients */
+.bg-windows-logo {
+    background:
+        linear-gradient(to right, #f35325 45%, transparent 45%, transparent 55%, #81bc06 55%),
+        linear-gradient(to bottom, transparent 45%, transparent 45%, transparent 55%, transparent 55%);
+    /* Actually simplifying to just the colors for now as a placeholder */
+    background-color: transparent;
+    position: relative;
+}
+
+.bg-windows-logo::before,
+.bg-windows-logo::after {
+    content: '';
+    position: absolute;
+    width: 45%;
+    height: 45%;
+}
+
+.bg-windows-logo::before {
+    top: 0;
+    left: 0;
+    background: #f35325;
+    box-shadow: 11px 0 0 #81bc06;
+    /* approx distance */
+}
+
+.bg-windows-logo::after {
+    bottom: 0;
+    left: 0;
+    background: #05a6f0;
+    box-shadow: 11px 0 0 #ffba01;
 }
